@@ -188,7 +188,10 @@ class KatibClient(object):
         retain_trials: bool = False,
         packages_to_install: List[str] = None,
         pip_index_url: str = "https://pypi.org/simple",
-        metrics_collector_config: Dict[str, Any] = {"kind": "StdOut"},
+        metrics_collector_config: Dict[str, Any] = {
+            "kind": "StdOut",
+            "custom_collector": None,
+        },
     ):
         """Create HyperParameter Tuning Katib Experiment from the objective function.
 
@@ -253,9 +256,22 @@ class KatibClient(object):
                 to the base image packages. These packages are installed before
                 executing the objective function.
             pip_index_url: The PyPI url from which to install Python packages.
-            metrics_collector_config: Specify the config of metrics collector,
-                for example, `metrics_collector_config = {"kind": "Push"}`.
-                Currently, we only support `StdOut` and `Push` metrics collector.
+
+            `metrics_collector_config`: Specify the configuration
+            for the metrics collector with following keys:
+            - **kind**: Specify the kind of Metrics Collector. Currently supported values are:
+                - `StdOut`: Collects metrics from standard output.
+                - `None`: No metrics collection.
+                - `File`: Writes metrics to a file.
+                - `TensorFlowEvent`: Collects metrics in TensorFlow Event format.
+                - `PrometheusMetric`: Exposes metrics in a Prometheus-compatible format.
+                - `Custom`: For custom metrics collection. Use the "custom_collector"
+                                    key to specify the collector instance.
+
+            - **custom_collector**: If the `kind` is set to `Custom`, you must provide an
+                                    instance of a custom `V1Container` as the value.
+                            For example:`metrics_collector_config =
+                                {"kind" : "Custom", "custom_collector": <Instance of V1Container>}`.
 
         Raises:
             ValueError: Function arguments have incorrect type or value.
@@ -396,7 +412,10 @@ class KatibClient(object):
         # Up to now, we only support parameter `kind`, of which default value
         # is `StdOut`, to specify the kind of metrics collector.
         experiment.spec.metrics_collector_spec = models.V1beta1MetricsCollectorSpec(
-            collector=models.V1beta1CollectorSpec(kind=metrics_collector_config["kind"])
+            collector=models.V1beta1CollectorSpec(
+                kind=metrics_collector_config["kind"],
+                custom_collector=metrics_collector_config["custom_collector"],
+            )
         )
 
         # Create Trial specification.

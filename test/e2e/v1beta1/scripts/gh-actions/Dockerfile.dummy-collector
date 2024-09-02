@@ -1,0 +1,9 @@
+FROM python:3.8-slim
+
+WORKDIR /app
+
+COPY test/e2e/v1beta1/scripts/gh-actions/dummy-collector.py .
+
+RUN pip install kubernetes
+
+CMD ["python", "dummy-collector.py"]
