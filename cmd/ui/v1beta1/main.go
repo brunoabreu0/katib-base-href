@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 
@@ -43,31 +44,32 @@ func main() {
 	flag.Parse()
 	kuh := ui.NewKatibUIHandler(*dbManagerAddr)
 
+    baseHref := os.Getenv("KATIB_BASE_HREF")
+	if baseHref == "" {
+        baseHref = ""
+    }
+	log.Printf("Received KATIB_BASE_HREF: %s", baseHref)
+
 	log.Printf("Serving the frontend dir %s", *buildDir)
 	frontend := http.FileServer(http.Dir(*buildDir))
-	http.HandleFunc("/katib/", kuh.ServeIndex(*buildDir))
-	http.Handle("/katib/static/", http.StripPrefix("/katib/", frontend))
-
-	http.HandleFunc("/katib/fetch_experiments/", kuh.FetchExperiments)
-
-	http.HandleFunc("/katib/create_experiment/", kuh.CreateExperiment)
-
-	http.HandleFunc("/katib/delete_experiment/", kuh.DeleteExperiment)
-
-	http.HandleFunc("/katib/fetch_experiment/", kuh.FetchExperiment)
-	http.HandleFunc("/katib/fetch_trial/", kuh.FetchTrial)
-	http.HandleFunc("/katib/fetch_suggestion/", kuh.FetchSuggestion)
-
-	http.HandleFunc("/katib/fetch_hp_job_info/", kuh.FetchHPJobInfo)
-	http.HandleFunc("/katib/fetch_hp_job_trial_info/", kuh.FetchHPJobTrialInfo)
-	http.HandleFunc("/katib/fetch_nas_job_info/", kuh.FetchNASJobInfo)
-
-	http.HandleFunc("/katib/fetch_trial_templates/", kuh.FetchTrialTemplates)
-	http.HandleFunc("/katib/add_template/", kuh.AddTemplate)
-	http.HandleFunc("/katib/edit_template/", kuh.EditTemplate)
-	http.HandleFunc("/katib/delete_template/", kuh.DeleteTemplate)
-	http.HandleFunc("/katib/fetch_namespaces", kuh.FetchNamespaces)
-	http.HandleFunc("/katib/fetch_trial_logs/", kuh.FetchTrialLogs)
+	http.HandleFunc(fmt.Sprintf("%s/katib/", baseHref), kuh.ServeIndex(*buildDir, baseHref))
+	http.Handle(fmt.Sprintf("%s/katib/static/", baseHref), http.StripPrefix(fmt.Sprintf("%s/katib/", baseHref), frontend))
+	
+	http.HandleFunc(fmt.Sprintf("%s/katib/fetch_experiments/", baseHref), kuh.FetchExperiments)	
+	http.HandleFunc(fmt.Sprintf("%s/katib/create_experiment/", baseHref), kuh.CreateExperiment)
+	http.HandleFunc(fmt.Sprintf("%s/katib/delete_experiment/", baseHref), kuh.DeleteExperiment)
+	http.HandleFunc(fmt.Sprintf("%s/katib/fetch_experiment/", baseHref), kuh.FetchExperiment)
+	http.HandleFunc(fmt.Sprintf("%s/katib/fetch_trial/", baseHref), kuh.FetchTrial)
+	http.HandleFunc(fmt.Sprintf("%s/katib/fetch_suggestion/", baseHref), kuh.FetchSuggestion)
+	http.HandleFunc(fmt.Sprintf("%s/katib/fetch_hp_job_info/", baseHref), kuh.FetchHPJobInfo)
+	http.HandleFunc(fmt.Sprintf("%s/katib/fetch_hp_job_trial_info/", baseHref), kuh.FetchHPJobTrialInfo)
+	http.HandleFunc(fmt.Sprintf("%s/katib/fetch_nas_job_info/", baseHref), kuh.FetchNASJobInfo)
+	http.HandleFunc(fmt.Sprintf("%s/katib/fetch_trial_templates/", baseHref), kuh.FetchTrialTemplates)
+	http.HandleFunc(fmt.Sprintf("%s/katib/add_template/", baseHref), kuh.AddTemplate)
+	http.HandleFunc(fmt.Sprintf("%s/katib/edit_template/", baseHref), kuh.EditTemplate)
+	http.HandleFunc(fmt.Sprintf("%s/katib/delete_template/", baseHref), kuh.DeleteTemplate)
+	http.HandleFunc(fmt.Sprintf("%s/katib/fetch_namespaces/", baseHref), kuh.FetchNamespaces)
+	http.HandleFunc(fmt.Sprintf("%s/katib/fetch_trial_logs/", baseHref), kuh.FetchTrialLogs)
 
 	log.Printf("Serving at %s:%s", *host, *port)
 	if err := http.ListenAndServe(fmt.Sprintf("%s:%s", *host, *port), nil); err != nil {

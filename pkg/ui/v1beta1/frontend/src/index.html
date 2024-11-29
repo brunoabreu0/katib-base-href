@@ -2,10 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Frontend</title>
-    <base href="/" />
+    <title>katib</title>
+    <base href="{{ .KATIB_BASE_HREF }}">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="./static/favicon.ico" />
     <link
       href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
       rel="stylesheet"
@@ -13,6 +13,5 @@
   </head>
   <body class="mat-typography">
     <app-root></app-root>
-    <script defer src="/dashboard_lib.bundle.js"></script>
   </body>
 </html>

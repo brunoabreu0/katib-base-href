@@ -49,7 +49,7 @@ export class KWABackendService extends BackendService {
   getExperimentsSingleNamespace(namespace: string): Observable<Experiments> {
     // If the route doesn't end in a "/"" then the backend will return a 301 to
     // the url ending with "/".
-    const url = `/katib/fetch_experiments/?namespace=${namespace}`;
+    const url = `fetch_experiments/?namespace=${namespace}`;
 
     return this.http.get<any>(url).pipe(
       catchError(error => this.parseError(error)),
@@ -75,13 +75,13 @@ export class KWABackendService extends BackendService {
   }
 
   getExperimentTrialsInfo(name: string, namespace: string): Observable<any> {
-    const url = `/katib/fetch_hp_job_info/?experimentName=${name}&namespace=${namespace}`;
+    const url = `fetch_hp_job_info/?experimentName=${name}&namespace=${namespace}`;
 
     return this.http.get(url).pipe(catchError(error => this.parseError(error)));
   }
 
   getExperiment(name: string, namespace: string): Observable<ExperimentK8s> {
-    const url = `/katib/fetch_experiment/?experimentName=${name}&namespace=${namespace}`;
+    const url = `fetch_experiment/?experimentName=${name}&namespace=${namespace}`;
 
     return this.http
       .get(url)
@@ -91,7 +91,7 @@ export class KWABackendService extends BackendService {
   }
 
   deleteExperiment(name: string, namespace: string): Observable<ExperimentK8s> {
-    const url = `/katib/delete_experiment/?experimentName=${name}&namespace=${namespace}`;
+    const url = `delete_experiment/?experimentName=${name}&namespace=${namespace}`;
 
     return this.http
       .delete(url)
@@ -101,17 +101,17 @@ export class KWABackendService extends BackendService {
   }
 
   getTrial(name: string, namespace: string): Observable<any> {
-    const url = `/katib/fetch_hp_job_trial_info/?trialName=${name}&namespace=${namespace}`;
+    const url = `fetch_hp_job_trial_info/?trialName=${name}&namespace=${namespace}`;
     return this.http.get(url).pipe(catchError(error => this.parseError(error)));
   }
 
   getTrialInfo(name: string, namespace: string): Observable<TrialK8s> {
-    const url = `/katib/fetch_trial/?trialName=${name}&namespace=${namespace}`;
+    const url = `fetch_trial/?trialName=${name}&namespace=${namespace}`;
     return this.http.get(url).pipe(catchError(error => this.parseError(error)));
   }
 
   getTrialTemplates(namespace: string): Observable<TrialTemplateResponse> {
-    const url = `/katib/fetch_trial_templates/`;
+    const url = `fetch_trial_templates/`;
 
     return this.http
       .get<TrialTemplateResponse>(url)
@@ -119,7 +119,7 @@ export class KWABackendService extends BackendService {
   }
 
   createExperiment(exp: ExperimentK8s): Observable<any> {
-    const url = `/katib/create_experiment/`;
+    const url = `create_experiment/`;
 
     return this.http
       .post(url, { postData: exp })
@@ -127,7 +127,7 @@ export class KWABackendService extends BackendService {
   }
 
   getTrialLogs(name: string, namespace: string): Observable<any> {
-    const url = `/katib/fetch_trial_logs/?trialName=${name}&namespace=${namespace}`;
+    const url = `fetch_trial_logs/?trialName=${name}&namespace=${namespace}`;
 
     return this.http
       .get(url)

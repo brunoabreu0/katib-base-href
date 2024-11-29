@@ -2,7 +2,7 @@
   <lib-title-actions-toolbar title="Experiments" [buttons]="buttons" i18n-title>
     <lib-namespace-select
       *ngIf="(ns.dashboardConnected$ | async) === dashboardDisconnectedState"
-      namespacesUrl="/katib/fetch_namespaces"
+      namespacesUrl="fetch_namespaces"
     ></lib-namespace-select>
   </lib-title-actions-toolbar>
 

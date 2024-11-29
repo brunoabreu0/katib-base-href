@@ -17,8 +17,8 @@ export class AppComponent {
       domSanitizer.bypassSecurityTrustResourceUrl(
         `${
           this.env.production
-            ? '/katib/static/assets/pipeline-centered.svg'
-            : '/assets/pipeline-centered.svg'
+            ? 'static/assets/pipeline-centered.svg'
+            : 'assets/pipeline-centered.svg'
         }`,
       ),
     );
