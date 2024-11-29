@@ -63,7 +63,6 @@ func NewKatibUIHandler(dbManagerAddr string) *KatibUIHandler {
 // ServeIndex will return index.html for any non-API URL
 func (k *KatibUIHandler) ServeIndex(buildDir string, baseHref string) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		baseHref = baseHref + "/katib/"
 		log.Printf("Setting Angular Application base href: %s", baseHref)		
 
 		fp := filepath.Join(buildDir, "static/index.html")
@@ -72,13 +71,13 @@ func (k *KatibUIHandler) ServeIndex(buildDir string, baseHref string) func(w htt
 		// never cache index.html
 		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0")
 
-		// Parse the index.html template
+		// parse the index.html template
         tmpl, err := template.ParseFiles(string(fp))
         if err != nil {
             log.Fatalf("Error parsing template: %v", err)
         }
 
-        // Pass the baseHref to the template
+        // pass the baseHref to the template
         err = tmpl.Execute(w, map[string]string{
             "KATIB_BASE_HREF": baseHref,
         })
